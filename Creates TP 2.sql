@@ -30,7 +30,7 @@ CREATE TABLE basta_lola.Pedido (
     ID_Pedido INT AUTO_INCREMENT PRIMARY KEY,
     ID_Cliente INT,
     Fecha DATETIME NOT NULL,
-    Estado ENUM('Entregado', 'Pendiente') NOT NULL,
+    Estado ENUM('Entregado', 'Pendiente', 'Eliminado') NOT NULL,
     FOREIGN KEY (ID_Cliente) REFERENCES Cliente(ID_Cliente)
 );
 
