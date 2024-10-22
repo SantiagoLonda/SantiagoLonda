@@ -611,6 +611,7 @@ public class Main {
         boolean resultado = detallePedidoDAO.eliminarDetallePedido(idDetalle);
         if (resultado) {
             System.out.println("Detalle de pedido eliminado y estado del pedido actualizado a 'Eliminado'.");
+            System.out.println("Stock modificado correctamente.");
         } else {
             System.out.println("Error al eliminar el detalle de pedido.");
         }
@@ -630,6 +631,7 @@ public class Main {
             boolean resultado = detallePedidoDAO.registrarDetallePedidoConPedido(detallePedido);
             if (resultado) {
                 System.out.println("Pedido y Detalle registrados con éxito.");
+                System.out.println("Stock modificado correctamente.");
             } else {
                 System.out.println("Error al registrar el pedido o el detalle.");
             }
@@ -667,5 +669,6 @@ public class Main {
         }
     }
 }
+
 
 
