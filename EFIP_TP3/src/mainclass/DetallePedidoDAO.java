@@ -33,7 +33,7 @@ public class DetallePedidoDAO {
     }
 
     // Metodo para registrar un nuevo Detalle de Pedido
-    public boolean registrarDetallePedidoConPedido(DetallePedido detallePedido) {
+    public boolean registrarDetallePedidoConPedido(DetallePedido detallePedido, int idCliente) {
         Connection conn = null;
         PreparedStatement stmtPedido = null;
         PreparedStatement stmtDetalle = null;
@@ -43,12 +43,11 @@ public class DetallePedidoDAO {
             conn = MySQLConnection.getConnection();
             conn.setAutoCommit(false); // Deshabilitar autocommit para manejar la transacción
 
-            // Se inserta en la Tabla Pedido el detalle de Pedido
+            // Se inserta en la Tabla Pedido con el id_cliente que se pasa como parámetro
             String insertPedido = "INSERT INTO Pedido (id_Cliente, fecha, estado) VALUES (?, ?, ?)";
             stmtPedido = conn.prepareStatement(insertPedido, PreparedStatement.RETURN_GENERATED_KEYS);
 
-            // Logica para buscar el cliente o gestionar la informacion del pedido
-            stmtPedido.setInt(1, 1);  
+            stmtPedido.setInt(1, idCliente);  // El id_cliente ingresado por el usuario
             stmtPedido.setDate(2, new java.sql.Date(System.currentTimeMillis())); // Se carga pedido con la fecha actual
             stmtPedido.setString(3, "Pendiente"); // Se carga pedido con el estado Pendiente
 
@@ -58,7 +57,7 @@ public class DetallePedidoDAO {
                 return false;
             }
 
-            // Obtiene el ID del pedido recien insertado
+            // Obtiene el ID del pedido recién insertado
             ResultSet generatedKeys = stmtPedido.getGeneratedKeys();
             int idPedidoGenerado = -1;
             if (generatedKeys.next()) {
@@ -117,12 +116,13 @@ public class DetallePedidoDAO {
     }
 
 
+
     // Metodo para eliminar DetallePedido por ID
     public boolean eliminarDetallePedido(int id_Detalle) {
         Connection conn = null;
         PreparedStatement stmtActualizarPedido = null;
         PreparedStatement stmtEliminarDetalle = null;
-        PreparedStatement stmtActualizarProducto = null; // Para actualizar el stock de producto
+        PreparedStatement stmtActualizarProducto = null;
 
         try {
             conn = MySQLConnection.getConnection();
@@ -144,7 +144,7 @@ public class DetallePedidoDAO {
                 return false;
             }
 
-            // Actualizar el estado en Pedido a "Eliminado"
+            // Actualiza el estado en Pedido a "Eliminado"
             String queryActualizarPedido = "UPDATE Pedido SET estado = 'Eliminado' WHERE id_Pedido = (SELECT id_Pedido FROM DetallePedido WHERE id_Detalle = ?)";
             stmtActualizarPedido = conn.prepareStatement(queryActualizarPedido);
             stmtActualizarPedido.setInt(1, id_Detalle);
@@ -155,7 +155,7 @@ public class DetallePedidoDAO {
                 return false;
             }
 
-            // Luego, eliminar el detalle del pedido
+            // Luego, elimina el detalle del pedido
             String queryEliminarDetalle = "DELETE FROM DetallePedido WHERE id_Detalle = ?";
             stmtEliminarDetalle = conn.prepareStatement(queryEliminarDetalle);
             stmtEliminarDetalle.setInt(1, id_Detalle);
@@ -166,10 +166,10 @@ public class DetallePedidoDAO {
                 return false;
             }
 
-            // Actualizar la cantidad del producto en stock (aumentar)
+            // Actualiza la cantidad del producto en stock (aumenta)
             String actualizarProducto = "UPDATE Producto SET cantidad = cantidad + ? WHERE id_Producto = ?";
             stmtActualizarProducto = conn.prepareStatement(actualizarProducto);
-            stmtActualizarProducto.setInt(1, cantidad);  // Aumentar la cantidad que estaba en el detalle
+            stmtActualizarProducto.setInt(1, cantidad);  // Aumenta la cantidad que estaba en el detalle
             stmtActualizarProducto.setInt(2, idProducto);
 
             int filasActualizadasProducto = stmtActualizarProducto.executeUpdate();
