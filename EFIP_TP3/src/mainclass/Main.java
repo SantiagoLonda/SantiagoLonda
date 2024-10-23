@@ -620,15 +620,27 @@ public class Main {
 
     private static void registrarDetallePedido(Scanner scanner) {
         try {
+            // Solicitar el ID del cliente
+            System.out.print("Ingrese el ID del cliente: ");
+            int idCliente = Integer.parseInt(scanner.nextLine());
+
+            // Solicitar el ID del producto
             System.out.print("Ingrese el ID del producto: ");
             int idProducto = Integer.parseInt(scanner.nextLine());
+
+            // Solicitar la cantidad
             System.out.print("Ingrese la cantidad: ");
             int cantidad = Integer.parseInt(scanner.nextLine());
+
+            // Solicitar el precio total
             System.out.print("Ingrese el precio total: ");
             double precioTotal = Double.parseDouble(scanner.nextLine());
 
+            // Crear el objeto DetallePedido
             DetallePedido detallePedido = new DetallePedido(0, idProducto, cantidad, precioTotal);
-            boolean resultado = detallePedidoDAO.registrarDetallePedidoConPedido(detallePedido);
+
+            // Registrar el detalle de pedido y el pedido con el id_cliente ingresado
+            boolean resultado = detallePedidoDAO.registrarDetallePedidoConPedido(detallePedido, idCliente);
             if (resultado) {
                 System.out.println("Pedido y Detalle registrados con éxito.");
                 System.out.println("Stock modificado correctamente.");
@@ -669,6 +681,5 @@ public class Main {
         }
     }
 }
-
 
 
